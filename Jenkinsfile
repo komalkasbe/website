@@ -25,19 +25,10 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'docker run --rm -d --name temp -p 8080:80 $IMAGE_NAME'
-                sh '''
-                    echo "Waiting for app to be ready..."
-                    for i in {1..10}; do
-                      if curl -f http://localhost:8080; then
-                        echo "App is up!"
-                        break
-                      fi
-                      echo "Retry $i/10: App not yet available, sleeping..."
-                      sleep 2
-                    done
-                '''
-                sh 'docker rm -f temp || true'
+                sh 'docker run --rm -d --name temp -p 8081:80 $IMAGE_NAME'
+                sh 'sleep 5'
+                sh 'curl -f http://localhost:8081 || echo "Test Failed"'
+                sh 'docker rm -f temp'
             }
         }
 

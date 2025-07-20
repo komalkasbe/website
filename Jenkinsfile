@@ -1,12 +1,24 @@
 pipeline {
     agent any
+
     environment {
         IMAGE_NAME = "my-webapp"
     }
+
+    options {
+        skipDefaultCheckout() // Prevent default SCM checkout
+    }
+
     stages {
+        stage('Checkout') {
+            steps {
+                // Checkout only master branch
+                git branch: 'master', url: 'https://github.com/komalkasbe/website.git'
+            }
+        }
+
         stage('Build') {
             steps {
-                git branch: "master", url: 'https://github.com/komalkasbe/website.git'
                 sh 'docker build -t $IMAGE_NAME .'
             }
         }

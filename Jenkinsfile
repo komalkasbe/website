@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                git branch: "${env.BRANCH_NAME}", url: 'https://github.com/komalkasbe/website.git'
+                git branch: "develop", url: 'https://github.com/komalkasbe/website.git'
                 sh 'docker build -t $IMAGE_NAME .'
             }
         }

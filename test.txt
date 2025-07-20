@@ -1,3 +1,2 @@
 This is a commit in develop branch to test the product
 Second line
-Third line

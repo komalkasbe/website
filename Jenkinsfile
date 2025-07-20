@@ -1,42 +1,32 @@
 pipeline {
     agent any
-
     environment {
-        IMAGE_NAME = "hshar/webapp"
+        IMAGE_NAME = "my-webapp"
     }
-
     stages {
         stage('Build') {
             steps {
-                echo "Building Docker image..."
+                git branch: "${env.BRANCH_NAME}", url: 'https://github.com/komalkasbe/website.git'
                 sh 'docker build -t $IMAGE_NAME .'
             }
         }
 
         stage('Test') {
             steps {
-                echo "Running tests..."
-                sh 'echo "Tests Passed!"'
+                sh 'docker run --rm -d --name temp $IMAGE_NAME'
+                sh 'sleep 5'
+                sh 'curl -f http://localhost || echo "Test Failed"'
+                sh 'docker rm -f temp'
             }
         }
 
-        stage('Deploy to Production') {
+        stage('Deploy to Prod') {
             when {
                 branch 'master'
             }
             steps {
-                echo "Deploying to Production environment..."
-                sh 'docker run -d -p 80:80 --name webapp $IMAGE_NAME'
+                sh 'docker run -d -p 80:80 --name prod_app $IMAGE_NAME'
             }
-        }
-    }
-
-    post {
-        success {
-            echo "Pipeline executed successfully."
-        }
-        failure {
-            echo "Pipeline failed."
         }
     }
 }

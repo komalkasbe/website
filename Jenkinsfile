@@ -25,7 +25,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'docker run --rm -d --name temp -p 8080:80 $IMAGE_ĀNAME'
+                sh 'docker run --rm -d --name temp -p 8080:80 $IMAGE_NAME'
                 sh '''
                     echo "Waiting for app to be ready..."
                     for i in {1..10}; do
